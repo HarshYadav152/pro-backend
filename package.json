@@ -1,0 +1,15 @@
+{
+  "name": "profestional-backend",
+  "version": "1.0.0",
+  "description": "using js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript",
+    "backend"
+  ],
+  "author": "Harsh Yadav",
+  "license": "ISC"
+}
