@@ -5,9 +5,10 @@ const storage = multer.diskStorage({
         cb(null,"./public/temp")
     },
     filename:function(req,file,cb){
-        const uniqueSuffix = Date.now();
+        // const uniqueSuffix = Date.now();
         console.log("File uploaded : ",file)
-        cb(null,file.originalname + "-" + uniqueSuffix)
+        // cb(null,file.originalname + "-" + uniqueSuffix)
+        cb(null,file.originalname)
     }
 })
 
