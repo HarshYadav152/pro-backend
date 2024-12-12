@@ -8,10 +8,10 @@ cloudinary.config({
 })
 
 
-const uploadingFilesonCloudinary = async(localFilePath) =>{
+const uploadingFilesonCloudinary = async( localFilePath) =>{
     try {
         if(!localFilePath){
-            return null
+            throw new Error("Local file path is invalid or file does not exist.");
         }
         // upload files on cloudinary 
         const response = await cloudinary.uploader.upload(localFilePath,{
