@@ -8,7 +8,7 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 
 const generateAccessTokenAndRefreshToken = async(userID)=>{
     try {
-        const user = User.findOne(userID)
+        const user = await User.findOne(userID)
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
 
@@ -57,7 +57,7 @@ const registerUser = asyncHandler( async(req,res)=>{
     }
 
     console.log("File object from request : ",req.files)
-    const avatarLocalPath = req.files?.avatar[0]?.path
+    const avatarLocalPath = req.files?.avatar[0]?.path;
     // const coverImageLocalPath = req.files?.coverImage[0]?.path
 
     let coverImageLocalPath;
@@ -66,7 +66,7 @@ const registerUser = asyncHandler( async(req,res)=>{
     }
 
     if(!avatarLocalPath){
-        throw new ApiError(400,"avatar nahi mila") // message to be changed in english
+        throw new ApiError(400,"avatar nahi mila local path") // message to be changed in english
     }
 
     // uploading on cloudinary
@@ -79,11 +79,11 @@ const registerUser = asyncHandler( async(req,res)=>{
 
     const user = await User.create({
         fullName,
-        avatar:avatar.url,
-        coverImage:coverImage?.url||"",
+        avatar: avatar.url,
+        coverImage: coverImage?.url||"",
         email,
         password,
-        username:username.toLowerCase()
+        username: username.toLowerCase()
     })
 
     const createdUser = await User.findById(user._id).select(
@@ -110,7 +110,7 @@ const loginUser = asyncHandler(async(req,res)=>{
 
     const {username,email,password} = req.body;
 
-    if(!username || !email){
+    if(!(username ||email)){
         throw new ApiError(400,"username aur email to dena jaruri hai")
     }
 
@@ -130,8 +130,8 @@ const loginUser = asyncHandler(async(req,res)=>{
 
     const {accessToken,refreshToken} = await generateAccessTokenAndRefreshToken(user._id)
 
-    delete user.password // remove these fields from user object
-    delete user.refreshToken // remove these fields from user object
+    // delete user.password // remove these fields from user object
+    // delete user.refreshToken // remove these fields from user object
 
     const loggedInUser = await User.findOne(user._id).select("-password -refreshToken")  // optional
 
@@ -176,8 +176,8 @@ const logoutUser = asyncHandler(async(req,res)=>{
         secure:true
     }
     return res.status(200)
-    .clealCookie("accessToken",options)
-    .clealCookie("refreshToken",options)
+    .clearCookie("accessToken",options)
+    .clearCookie("refreshToken",options)
     .json(new ApiResponse(200,{},"User Logged-out successfully"))
 })
 
