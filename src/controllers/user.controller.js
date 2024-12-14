@@ -5,6 +5,7 @@ import {User} from "../models/user.models.js"
 import {uploadingFilesonCloudinary} from "../utils/cloudinary.services.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
+import mongoose from "mongoose"
 
 
 const generateAccessTokenAndRefreshToken = async(userID)=>{
@@ -22,7 +23,7 @@ const generateAccessTokenAndRefreshToken = async(userID)=>{
     }
 }
 
-const registerUser = asyncHandler( async(req,res)=>{
+const registerUser = asyncHandler(async(req,res)=>{
     // get user details from fronted
     // validation -- at least not empty
     // check if user already exist  -- jo unique hai
@@ -404,6 +405,17 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
         new ApiResponse(200,channel[0],"User channel fetched successfully")
     )
 })
+
+const getWatchHistory = asyncHandler(async(req,res)=>{
+
+    const user = await User.aggregate([
+        {
+            $match:{
+                _id: new mongoose.Types.ObjectId(req.user._id)
+            }
+        }
+    ])
+})
 export {
     registerUser,
     loginUser,
@@ -413,5 +425,7 @@ export {
     getCurrentUser,
     updateAccountDetails,
     UpdateUserAvatar,
-    UpdateUserCoverImage
+    UpdateUserCoverImage,
+    getUserChannelProfile,
+    getWatchHistory
 }
